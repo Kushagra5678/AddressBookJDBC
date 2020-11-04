@@ -1,5 +1,6 @@
 package com.practice.addressbook;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.Assert;
@@ -16,5 +17,15 @@ public class AddressBookTest {
     	addBookService.updateFirstName("San", "Sanjay");
     	AddressBookData contact = addBookService.checkAddressBookInSync("Sanjay");
     	Assert.assertEquals("Sanjay", contact.first_name);
+    }
+	
+	@Test 
+    public void givenDateRange_WhenRetrieved_ShouldMatchContactsCount() {
+    	AddressBookService addBookService = new AddressBookService();
+    	addBookService.readAddresBookData(IOService.DB_IO);
+    	LocalDate startDate = LocalDate.of(2015, 03, 01);
+    	LocalDate endDate = LocalDate.now();
+    	List<AddressBookData> addBookData = addBookService.readAddressBookForDateRange(IOService.DB_IO, startDate, endDate);
+    	Assert.assertEquals(4, addBookData.size());
     }
 }

@@ -1,5 +1,6 @@
 package com.practice.addressbook;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class AddressBookService {
@@ -17,6 +18,13 @@ public class AddressBookService {
 	public AddressBookService(List<AddressBookData> addBookList) {
 		this();
 		this.addBookList = addBookList;
+	}
+	
+	public List<AddressBookData> readAddressBookForDateRange(IOService ioService, LocalDate startDate, LocalDate endDate) {
+		if(ioService.equals(IOService.DB_IO)) {
+			return addBookDB.getAddressBookForDateRange(startDate, endDate);
+		}
+		return null;
 	}
 
 	public List<AddressBookData> readAddresBookData(IOService ioService) {
