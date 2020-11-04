@@ -25,5 +25,20 @@ public class AddressBookService {
 		}
 		return this.addBookList;
 	}
+	
+	public void updateFirstName(String oldFirstName, String newFirstName) {
+		int result = addBookDB.updateData(oldFirstName, newFirstName);
+		if (result == 0)
+			return;
+		AddressBookData data = this.checkAddressBookInSync(newFirstName);
+		if (data != null) {
+			data.first_name = newFirstName;
+		}
 
+	}
+
+	public AddressBookData checkAddressBookInSync(String newFirstName) {
+		List<AddressBookData> list = addBookDB.getAddressBookData(newFirstName);
+		return list.stream().filter(con -> con.first_name.equals(newFirstName)).findFirst().orElse(null);
+	}
 }

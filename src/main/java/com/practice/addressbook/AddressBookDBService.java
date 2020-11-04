@@ -67,4 +67,46 @@ public class AddressBookDBService {
 		return addressBookList;
 	}
 	
+	public List<AddressBookData> getAddressBookData(String firstName) {
+		List<AddressBookData> addBookList = null;
+		if (this.preparedStatement == null) {
+			this.prepareStatementForEmployeeData();
+		}
+		try {
+			preparedStatement.setString(1, firstName);
+			ResultSet result = preparedStatement.executeQuery();
+			addBookList = this.getAddressBookData(result);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return addBookList;
+	}
+
+	private void prepareStatementForEmployeeData() {
+		try {
+			Connection connection = this.getConnection();
+			String sql = "SELECT * FROM contact_details WHERE first_name = ?";
+			preparedStatement = connection.prepareStatement(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public int updateData(String oldFirstName, String newFirstName) {
+		return this.updateAddressBookUsingStatement(oldFirstName, newFirstName);
+	}
+
+	private int updateAddressBookUsingStatement(String oldFirstName, String newFirstName) {
+		String sql = String.format("update contact_details set first_name = '%s' where first_name = '%s';", newFirstName,
+				oldFirstName);
+		try {
+			Connection connection = getConnection();
+			Statement statement = connection.createStatement();
+			return statement.executeUpdate(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
 }
