@@ -9,7 +9,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AddressBookDBService {
 	private static AddressBookDBService addBookDB;
@@ -94,11 +96,7 @@ public class AddressBookDBService {
 			e.printStackTrace();
 		}
 	}
-
-	public int updateData(String oldFirstName, String newFirstName) {
-		return this.updateAddressBookUsingStatement(oldFirstName, newFirstName);
-	}
-
+	
 	private int updateAddressBookUsingStatement(String oldFirstName, String newFirstName) {
 		String sql = String.format("update contact_details set first_name = '%s' where first_name = '%s';", newFirstName,
 				oldFirstName);
@@ -111,12 +109,13 @@ public class AddressBookDBService {
 		}
 		return 0;
 	}
-	
-	public List<AddressBookData> getAddressBookForDateRange(LocalDate startDate, LocalDate endDate) {
-		String sql = String.format("SELECT * FROM contact_details WHERE start BETWEEN '%s' AND '%s'", Date.valueOf(startDate), Date.valueOf(endDate));
-		return this.getAddressBookDataUSingDB(sql);
+
+	public int updateData(String oldFirstName, String newFirstName) {
+		return this.updateAddressBookUsingStatement(oldFirstName, newFirstName);
 	}
 
+	
+	
 	private List<AddressBookData> getAddressBookDataUSingDB(String sql) {
 		List<AddressBookData> addBookList = new ArrayList<>();
 		try(Connection connection = this.getConnection()) {
@@ -129,4 +128,47 @@ public class AddressBookDBService {
 		}
 		return addBookList;
 	}
+	
+	public List<AddressBookData> getAddressBookForDateRange(LocalDate startDate, LocalDate endDate) {
+		String sql = String.format("SELECT * FROM contact_details WHERE start BETWEEN '%s' AND '%s'", Date.valueOf(startDate), Date.valueOf(endDate));
+		return this.getAddressBookDataUSingDB(sql);
+	}
+
+	public Map<String, Integer> getCountByCity() {
+		String sql = "SELECT city, COUNT(city) AS City_Count from contact_details group by city;";
+		Map<String, Integer> countByCity = new HashMap<String, Integer>();
+		try {
+			Connection connection = getConnection();
+			Statement statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			while(result.next()) {
+				String city = result.getString("city");
+				int count = result.getInt("City_Count");
+				countByCity.put(city, count);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return countByCity;
+	}
+
+	public Map<String, Integer> getCountByState() {
+		String sql = "SELECT state, COUNT(state) AS State_Count from contact_details group by state;";
+		Map<String, Integer> countByState = new HashMap<String, Integer>();
+		try {
+			Connection connection = getConnection();
+			Statement statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			while(result.next()) {
+				String city = result.getString("state");
+				int count = result.getInt("State_Count");
+				countByState.put(city, count);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return countByState;
+	}
+
+	
 }

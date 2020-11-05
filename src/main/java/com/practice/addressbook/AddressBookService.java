@@ -2,6 +2,7 @@ package com.practice.addressbook;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public class AddressBookService {
 	public enum IOService {
@@ -48,5 +49,19 @@ public class AddressBookService {
 	public AddressBookData checkAddressBookInSync(String newFirstName) {
 		List<AddressBookData> list = addBookDB.getAddressBookData(newFirstName);
 		return list.stream().filter(con -> con.first_name.equals(newFirstName)).findFirst().orElse(null);
+	}
+
+	public Map<String, Integer> readCountContactsByCity(IOService ioService) {
+		if(ioService.equals(IOService.DB_IO)) {
+			return addBookDB.getCountByCity();
+		}
+		return null;
+	}
+	
+	public Map<String, Integer> readCountContactsByState(IOService ioService) {
+		if(ioService.equals(IOService.DB_IO)) {
+			return addBookDB.getCountByState();
+		}
+		return null;
 	}
 }

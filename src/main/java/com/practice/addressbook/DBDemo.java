@@ -6,13 +6,13 @@ import java.sql.DriverManager;
 public class DBDemo {
 	public static void main(String[] args) {
 
-		String jdbcURL = "jdbc:mysql://localhost:3306/pay_roll_service";
+		String jdbcURL = "jdbc:mysql://localhost:3306/address_book_service";
 		String userName = "kushagra";
 		String password = "admin1";
 		Connection connection = null;
 
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			System.out.println("Driver loaded!");
 		} catch (ClassNotFoundException e) {
 			throw new IllegalStateException("cannot find the driver in the classpath!", e);
