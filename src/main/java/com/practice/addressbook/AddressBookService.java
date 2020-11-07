@@ -64,4 +64,13 @@ public class AddressBookService {
 		}
 		return null;
 	}
+
+	public void addNewContact(int id, String firstName, String lastName, String address, String city, String state,
+			int zip, String phone, String email, LocalDate start) {
+		// TODO Auto-generated method stub
+		{
+			addBookList.add(addBookDB.addnewContactToDB(id, firstName, lastName, address, city, state, zip, phone, email, start));
+		}
+		
+	}
 }

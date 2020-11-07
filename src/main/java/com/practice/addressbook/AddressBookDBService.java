@@ -170,5 +170,30 @@ public class AddressBookDBService {
 		return countByState;
 	}
 
-	
+	public AddressBookData addnewContactToDB(int id, String firstName, String lastName, String address, String city,
+			String state, int zip, String phone, String email, LocalDate start) {
+		// TODO Auto-generated method stub
+		AddressBookData addBookData = null;
+		String sql = String.format(
+				"Insert into contact_details(first_name, last_name, address, city, state, zip, phone_number, email, start) values('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');",
+				firstName, lastName, address, city, state, zip, phone, email, start);
+		try(Connection connection = this.getConnection()) {
+			Statement statement = connection.createStatement();
+			int rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
+			if(rowAffected == 1) {
+				ResultSet result = statement.getGeneratedKeys();
+				if(result.next())	
+					firstName = result.getString("first_name");
+			}
+			addBookData = new AddressBookData(id, firstName, lastName, address, city, state, zip, phone, email, start);
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return addBookData;
+	}
+
 }
+
+	
+

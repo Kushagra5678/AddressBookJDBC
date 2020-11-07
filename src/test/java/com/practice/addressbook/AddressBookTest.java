@@ -28,7 +28,7 @@ public class AddressBookTest {
     	LocalDate startDate = LocalDate.of(2015, 03, 01);
     	LocalDate endDate = LocalDate.now();
     	List<AddressBookData> addBookData = addBookService.readAddressBookForDateRange(IOService.DB_IO, startDate, endDate);
-    	Assert.assertEquals(4, addBookData.size());
+    	Assert.assertEquals(5, addBookData.size());
     }
 	//UC19
 	@Test
@@ -36,7 +36,7 @@ public class AddressBookTest {
     	AddressBookService addBookService = new AddressBookService();
     	addBookService.readAddresBookData(IOService.DB_IO);
     	Map<String, Integer> countContactsByCity = addBookService.readCountContactsByCity(IOService.DB_IO);
-    	Assert.assertTrue(countContactsByCity.get("saharanpur").equals(4));
+    	Assert.assertTrue(countContactsByCity.get("saharanpur").equals(5));
     }
 	
 	@Test
@@ -44,6 +44,15 @@ public class AddressBookTest {
     	AddressBookService addBookService = new AddressBookService();
     	addBookService.readAddresBookData(IOService.DB_IO);
     	Map<String, Integer> countContactsByState = addBookService.readCountContactsByState(IOService.DB_IO);
-    	Assert.assertTrue(countContactsByState.get("UP").equals(4));
+    	Assert.assertTrue(countContactsByState.get("UP").equals(5));
+    }
+	//UC20
+	@Test
+    public void givenNewContact_WhenAdded_ShouldSyncWithDB() {
+    	AddressBookService addBookService = new AddressBookService();
+    	addBookService.readAddresBookData(IOService.DB_IO);
+    	addBookService.addNewContact(4, "Raj", "Gupta", "abc", "saharanpur", "UP", 247001, "9987656789", "raj@gmail.com", LocalDate.of(2020, 11, 07));
+    	AddressBookData contact = addBookService.checkAddressBookInSync("Raj");
+    	Assert.assertEquals("raj@gmail.com", contact.email);
     }
 }
